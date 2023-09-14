@@ -4,7 +4,7 @@ with open("README.md") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="victron-ble-ha-parser",
+    name="victron_ble_ha_parser",
     version="0.1.0",
     license="apache-2.0",
     author="Raj Laud",
