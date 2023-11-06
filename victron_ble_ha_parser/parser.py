@@ -12,6 +12,8 @@ from .custom_state_data import Keys, SensorDeviceClass, Units
 from victron_ble.devices import (
     BatteryMonitor,
     BatteryMonitorData,
+    DcDcConverter,
+    DcDcConverterData,
     DcEnergyMeter,
     DcEnergyMeterData,
     SolarCharger,
@@ -78,7 +80,9 @@ class VictronBluetoothDeviceData(BluetoothData):
         if parser is None:
             _LOGGER.debug("Ignoring unsupported advertisement %s", raw_data.hex())
             return
-        if not issubclass(parser, (BatteryMonitor, DcEnergyMeter, SolarCharger, VEBus)):
+        if not issubclass(
+            parser, (BatteryMonitor, DcDcConverter, DcEnergyMeter, SolarCharger, VEBus)
+        ):
             _LOGGER.debug("Unsupported device type")
             return
         self.set_device_manufacturer(data.manufacturer or "Victron")
@@ -97,6 +101,8 @@ class VictronBluetoothDeviceData(BluetoothData):
             return
         if isinstance(parsed_data, BatteryMonitorData):
             self._update_battery_monitor(parsed_data)
+        elif isinstance(parsed_data, DcDcConverterData):
+            self._update_dc_dc_converter(parsed_data)
         elif isinstance(parsed_data, DcEnergyMeterData):
             self._update_dc_energy_meter(parsed_data)
         elif isinstance(parsed_data, SolarChargerData):
@@ -162,6 +168,38 @@ class VictronBluetoothDeviceData(BluetoothData):
             Keys.MIDPOINT_VOLTAGE,
             Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
             data.get_midpoint_voltage(),
+            SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+
+    def _update_dc_dc_converter(self, data: DcDcConverterData) -> None:
+        charge_state = data.get_charge_state()
+        self.update_sensor(
+            Keys.CHARGE_STATE,
+            None,
+            charge_state.name if charge_state else None,
+        )
+        charge_state = data.get_charger_error()
+        self.update_sensor(
+            Keys.CHARGER_ERROR,
+            None,
+            charger_error.name if charger_error else None,
+        )
+        self.update_sensor(
+            Keys.INPUT_VOLTAGE,
+            Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
+            data.get_input_voltage(),
+            SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+        off_reason = data.get_off_reason()
+        self.update_sensor(
+            Keys.OFF_REASON,
+            None,
+            off_reason.name if off_reason else None,
+        )
+        self.update_sensor(
+            Keys.OUTPUT_VOLTAGE,
+            Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
+            data.get_output_voltage(),
             SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
         )
 
