@@ -178,7 +178,7 @@ class VictronBluetoothDeviceData(BluetoothData):
             None,
             charge_state.name if charge_state else None,
         )
-        charge_state = data.get_charger_error()
+        charger_error = data.get_charger_error()
         self.update_sensor(
             Keys.CHARGER_ERROR,
             None,
