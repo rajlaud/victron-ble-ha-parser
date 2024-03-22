@@ -7,8 +7,6 @@ from bluetooth_sensor_state_data import BluetoothData
 from construct import StreamError
 from home_assistant_bluetooth import BluetoothServiceInfo
 
-from .custom_state_data import Keys, SensorDeviceClass, Units
-
 from victron_ble.devices import (
     BatteryMonitor,
     BatteryMonitorData,
@@ -18,10 +16,16 @@ from victron_ble.devices import (
     DcEnergyMeterData,
     SolarCharger,
     SolarChargerData,
+    SmartBatteryProtect,
+    SmartBatteryProtectData,
+    SmartLithium,
+    SmartLithiumData,
     VEBus,
     VEBusData,
     detect_device_type,
 )
+
+from .custom_state_data import Keys, SensorDeviceClass, Units
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -81,7 +85,16 @@ class VictronBluetoothDeviceData(BluetoothData):
             _LOGGER.debug("Ignoring unsupported advertisement %s", raw_data.hex())
             return
         if not issubclass(
-            parser, (BatteryMonitor, DcDcConverter, DcEnergyMeter, SolarCharger, VEBus)
+            parser,
+            (
+                BatteryMonitor,
+                DcDcConverter,
+                DcEnergyMeter,
+                SmartBatteryProtect,
+                SmartLithium,
+                SolarCharger,
+                VEBus,
+            ),
         ):
             _LOGGER.debug("Unsupported device type")
             return
@@ -107,6 +120,10 @@ class VictronBluetoothDeviceData(BluetoothData):
             self._update_dc_energy_meter(parsed_data)
         elif isinstance(parsed_data, SolarChargerData):
             self._update_solar_charger(parsed_data)
+        elif isinstance(parsed_data, SmartBatteryProtectData):
+            self._update_smart_battery_protect(parsed_data)
+        elif isinstance(parsed_data, SmartLithiumData):
+            self._update_smart_lithium(parsed_data)
         elif isinstance(parsed_data, VEBusData):
             self._update_vebus(parsed_data)
 
@@ -255,6 +272,82 @@ class VictronBluetoothDeviceData(BluetoothData):
             data.get_starter_voltage(),
             SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
         )
+
+    def _update_smart_battery_protect(self, data: SmartBatteryProtectData) -> None:
+        device_state = data.get_device_state()
+        self.update_sensor(
+            Keys.DEVICE_STATE,
+            None,
+            device_state.name if device_state else None,
+        )
+        output_state = data.get_output_state()
+        self.update_sensor(
+            Keys.OUTPUT_STATE,
+            None,
+            output_state.name if output_state else None,
+        )
+        error_code = data.get_error_code()
+        self.update_sensor(
+            Keys.ERROR_CODE,
+            None,
+            error_code.name if error_code else None,
+        )
+        alarm_reason = data.get_alarm_reason()
+        self.update_sensor(
+            Keys.ALARM,
+            None,
+            alarm_reason.name if alarm_reason else None,
+        )
+        warning_reason = data.get_warning_reason()
+        self.update_sensor(
+            Keys.WARNING,
+            None,
+            warning_reason.name if warning_reason else None,
+        )
+        off_reason = data.get_off_reason()
+        self.update_sensor(
+            Keys.OFF_REASON,
+            None,
+            off_reason.name if off_reason else None,
+        )
+        self.update_sensor(
+            Keys.INPUT_VOLTAGE,
+            Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
+            data.get_input_voltage(),
+            SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.OUTPUT_VOLTAGE,
+            Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
+            data.get_output_voltage(),
+            SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+
+    def _update_smart_lithium(self, data: SmartLithiumData) -> None:
+        self.update_sensor(
+            Keys.BATTERY_VOLTAGE,
+            Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
+            data.get_battery_voltage(),
+            SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.BATTERY_TEMPERATURE,
+            Units.TEMP_CELSIUS,
+            data.get_battery_temperature(),
+            SensorDeviceClass.TEMPERATURE,
+        )
+        self.update_sensor(
+            Keys.BALANCER_STATUS,
+            None,
+            data.get_balancer_state().name,
+        )
+        for i in range(7):
+            self.update_sensor(
+                getattr(Keys, f"CELL_{i+1}_VOLTAGE"),
+                Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
+                data.get_cell_voltages()[i],
+                SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+            )
 
     def _update_solar_charger(self, data: SolarChargerData) -> None:
         charge_state = data.get_charge_state()
