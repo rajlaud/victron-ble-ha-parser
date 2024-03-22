@@ -339,7 +339,7 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             Keys.BALANCER_STATUS,
             None,
-            data.get_balancer_status().name,
+            data.get_balancer_status(),
         )
         for i in range(7):
             self.update_sensor(
