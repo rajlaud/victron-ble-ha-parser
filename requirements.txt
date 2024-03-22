@@ -1,2 +1,2 @@
 -e .
-victron-ble @ git+https://github.com/rajlaud/victron-ble@smart-lithium-and-smart-battery-protect
+git+https://github.com/rajlaud/victron-ble@smart-lithium-and-smart-battery-protect
