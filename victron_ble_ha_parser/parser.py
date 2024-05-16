@@ -7,7 +7,7 @@ from bluetooth_sensor_state_data import BluetoothData
 from construct import StreamError
 from home_assistant_bluetooth import BluetoothServiceInfo
 
-from victron_ble.devices import (
+from ./victron-ble/victron_ble.devices import (
     BatteryMonitor,
     BatteryMonitorData,
     DcDcConverter,
