@@ -5,7 +5,7 @@ with open("README.md") as fh:
 
 setuptools.setup(
     name="victron_ble_ha_parser",
-    version="0.3.0",
+    version="0.4.0",
     license="apache-2.0",
     author="Raj Laud",
     author_email="raj.laud@gmail.com",
@@ -18,6 +18,5 @@ setuptools.setup(
     install_requires=[
         "bluetooth-sensor-state-data>=1.6.1",
         "sensor-state-data>=2.16.0",
-        "victron-ble>=0.6.0",
     ],
 )
