@@ -1,0 +1,3 @@
+[submodule "victron-ble"]
+	path = victron-ble
+	url = https://github.com/rajlaud/victron-ble
