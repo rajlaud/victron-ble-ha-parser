@@ -18,5 +18,6 @@ setuptools.setup(
     install_requires=[
         "bluetooth-sensor-state-data>=1.6.1",
         "sensor-state-data>=2.16.0",
+        "victron-ble @ git+https://github.com/rajlaud/victron-ble.git",
     ],
 )
