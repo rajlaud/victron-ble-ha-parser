@@ -13,6 +13,7 @@ purposes and while we wait for certain PRs to merge into the upstream `victron-b
 The goal is to make this part of Home Assistant core.
 
 If you'd like to test this, clone my fork on the HA project and checkout the `victron-ble-custom-component` branch:
+
 ```git clone https://github.com/rajlaud/home-assistant.git --branch victron-ble-custom-component```
 
 Then, copy or symlink `homeassistant/components/victron-ble` into your `config/custom_components` folder.
