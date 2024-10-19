@@ -51,7 +51,7 @@ class VictronBluetoothDeviceData(BluetoothData):
             _LOGGER.error("Unable to detect device type")
             return False
 
-        parsed_data = parser.PARSER.parse(data)
+        parsed_data = parser(self._advertisement_key).parse_container(data)
         if parsed_data is None:
             _LOGGER.error("Unable to parse data")
             return False
