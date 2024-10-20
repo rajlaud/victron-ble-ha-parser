@@ -4,7 +4,6 @@ import logging
 
 from bluetooth_sensor_state_data import BluetoothData
 
-from construct import StreamError
 from home_assistant_bluetooth import BluetoothServiceInfo
 
 from victron_ble.devices import (
@@ -76,11 +75,7 @@ class VictronBluetoothDeviceData(BluetoothData):
             # not an instant-update advertisement
             return
 
-        try:
-            parser = detect_device_type(raw_data)
-        except StreamError:
-            _LOGGER.debug("Malformed advertisement %s", raw_data.hex())
-            return
+        parser = detect_device_type(raw_data)
         if parser is None:
             _LOGGER.debug("Ignoring unsupported advertisement %s", raw_data.hex())
             return
@@ -332,14 +327,15 @@ class VictronBluetoothDeviceData(BluetoothData):
         )
         self.update_sensor(
             Keys.BATTERY_TEMPERATURE,
-            Units.TEMP_CELSIUS,
+            Units.TEMP_CELSIUS,  # type: ignore [arg-type]
             data.get_battery_temperature(),
-            SensorDeviceClass.TEMPERATURE,
+            SensorDeviceClass.TEMPERATURE,  # type: ignore [arg-type]
         )
+        balancer_status = data.get_balancer_status()
         self.update_sensor(
             Keys.BALANCER_STATUS,
             None,
-            data.get_balancer_status(),
+            data.balancer_status.name if balancer_status else None,
         )
         for i in range(7):
             self.update_sensor(
