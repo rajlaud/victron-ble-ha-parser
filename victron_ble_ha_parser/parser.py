@@ -58,7 +58,13 @@ class VictronBluetoothDeviceData(BluetoothData):
 
         encrypted_data = parsed_data.encrypted_data
 
-        if encrypted_data[0] != bytes.fromhex(self._advertisement_key)[0]:
+        try:
+            key_first_byte = bytes.fromhex(self._advertisement_key)[0]
+        except ValueError:
+            _LOGGER.error("Invalid advertisement key")
+            return False
+
+        if encrypted_data[0] != key_first_byte:
             # only possible check is whether the first byte matches
             _LOGGER.error("Advertisement key does not match")
             return False
