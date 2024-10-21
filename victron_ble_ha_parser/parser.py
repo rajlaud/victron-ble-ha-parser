@@ -1,6 +1,7 @@
 """Data class for Victron BLE suitable for Home Assistant integration."""
 
 import logging
+from struct import error as struct_error
 
 from bluetooth_sensor_state_data import BluetoothData
 
@@ -75,7 +76,11 @@ class VictronBluetoothDeviceData(BluetoothData):
             # not an instant-update advertisement
             return
 
-        parser = detect_device_type(raw_data)
+        try:
+            parser = detect_device_type(raw_data)
+        except struct_error:
+            parser = None
+
         if parser is None:
             _LOGGER.debug("Ignoring unsupported advertisement %s", raw_data.hex())
             return
@@ -335,7 +340,7 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             Keys.BALANCER_STATUS,
             None,
-            data.balancer_status.name if balancer_status else None,
+            balancer_status.name if balancer_status else None,
         )
         for i in range(7):
             self.update_sensor(
