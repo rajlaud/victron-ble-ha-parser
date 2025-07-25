@@ -168,12 +168,12 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             Keys.ALARM,
             None,
-            alarm.name if alarm else "no alarm",
+            alarm.name.lower() if alarm.name else "no alarm",
         )
         self.update_sensor(
             Keys.AUX_MODE,
             None,
-            data.get_aux_mode().name,
+            data.get_aux_mode().name.lower(),
         )
         self.update_sensor(
             Keys.TEMPERATURE,
@@ -199,13 +199,13 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             Keys.CHARGE_STATE,
             None,
-            charge_state.name if charge_state else None,
+            charge_state.name.lower() if charge_state else None,
         )
         charger_error = data.get_charger_error()
         self.update_sensor(
             Keys.CHARGER_ERROR,
             None,
-            charger_error.name if charger_error else None,
+            charger_error.name.lower() if charger_error else None,
         )
         self.update_sensor(
             Keys.INPUT_VOLTAGE,
@@ -217,7 +217,7 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             Keys.OFF_REASON,
             None,
-            off_reason.name if off_reason else None,
+            off_reason.name.lower() if off_reason.name else None,
         )
         self.update_sensor(
             Keys.OUTPUT_VOLTAGE,
@@ -229,7 +229,7 @@ class VictronBluetoothDeviceData(BluetoothData):
     def _update_dc_energy_meter(self, data: DcEnergyMeterData) -> None:
         meter_type = data.get_meter_type()
         if meter_type is not None:
-            meter_type_string = meter_type.name
+            meter_type_string = meter_type.name.lower()
         else:
             meter_type_string = None
         self.update_sensor(
@@ -253,7 +253,7 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             Keys.ALARM,
             None,
-            alarm.name if alarm else "no alarm",
+            alarm.name.lower() if alarm.name else "no alarm",
         )
         self.update_sensor(
             Keys.TEMPERATURE,
@@ -264,7 +264,7 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             Keys.AUX_MODE,
             None,
-            data.get_aux_mode().name,
+            data.get_aux_mode().name.lower(),
         )
         self.update_sensor(
             Keys.TEMPERATURE,
@@ -284,37 +284,37 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             Keys.DEVICE_STATE,
             None,
-            device_state.name if device_state else None,
+            device_state.name.lower() if device_state else None,
         )
         output_state = data.get_output_state()
         self.update_sensor(
             Keys.OUTPUT_STATE,
             None,
-            output_state.name if output_state else None,
+            output_state.name.lower() if output_state else None,
         )
         error_code = data.get_error_code()
         self.update_sensor(
             Keys.ERROR_CODE,
             None,
-            error_code.name if error_code else None,
+            error_code.name.lower() if error_code else None,
         )
         alarm_reason = data.get_alarm_reason()
         self.update_sensor(
             Keys.ALARM,
             None,
-            alarm_reason.name if alarm_reason else None,
+            alarm_reason.name.lower() if alarm_reason.name else None,
         )
         warning_reason = data.get_warning_reason()
         self.update_sensor(
             Keys.WARNING,
             None,
-            warning_reason.name if warning_reason else None,
+            warning_reason.name.lower() if warning_reason.name else None,
         )
         off_reason = data.get_off_reason()
         self.update_sensor(
             Keys.OFF_REASON,
             None,
-            off_reason.name if off_reason else None,
+            off_reason.name.lower() if off_reason.name else None,
         )
         self.update_sensor(
             Keys.INPUT_VOLTAGE,
@@ -346,7 +346,7 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             Keys.BALANCER_STATUS,
             None,
-            balancer_status.name if balancer_status else None,
+            balancer_status.name.lower() if balancer_status else None,
         )
         for i in range(7):
             self.update_sensor(
@@ -361,7 +361,7 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             Keys.CHARGE_STATE,
             None,
-            charge_state.name if charge_state else None,
+            charge_state.name.lower() if charge_state else None,
         )
         self.update_sensor(
             Keys.BATTERY_VOLTAGE,
@@ -399,7 +399,7 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             Keys.DEVICE_STATE,
             None,
-            device_state.name if device_state else None,
+            device_state.name.lower() if device_state else None,
         )
         ac_in_state = data.get_ac_in_state()
         self.update_sensor(
