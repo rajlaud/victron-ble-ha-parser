@@ -1,6 +1,8 @@
 """Data class for Victron BLE suitable for Home Assistant integration."""
 
 import logging
+
+from enum import Enum
 from struct import error as struct_error
 
 from bluetooth_sensor_state_data import BluetoothData
@@ -109,7 +111,7 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.set_device_type(parser.__name__)
         if not self.validate_advertisement_key(raw_data):
             return
-        assert self._advertisement_key is not None  # keep pylance happy
+        assert self._advertisement_key is not None
 
         try:
             parsed_data = parser(self._advertisement_key).parse(raw_data)
@@ -164,16 +166,15 @@ class VictronBluetoothDeviceData(BluetoothData):
             data.get_consumed_ah(),
             SensorDeviceClass.CURRENT_FLOW,  # type: ignore [arg-type]
         )
-        alarm = data.get_alarm()
         self.update_sensor(
             Keys.ALARM,
             None,
-            alarm.name.lower() if alarm.name else "no alarm",
+            _enum_to_lowercase(data.get_alarm()),
         )
         self.update_sensor(
             Keys.AUX_MODE,
             None,
-            data.get_aux_mode().name.lower(),
+            _enum_to_lowercase(data.get_aux_mode()),
         )
         self.update_sensor(
             Keys.TEMPERATURE,
@@ -195,17 +196,15 @@ class VictronBluetoothDeviceData(BluetoothData):
         )
 
     def _update_dc_dc_converter(self, data: DcDcConverterData) -> None:
-        charge_state = data.get_charge_state()
         self.update_sensor(
             Keys.CHARGE_STATE,
             None,
-            charge_state.name.lower() if charge_state else None,
+            _enum_to_lowercase(data.get_charge_state()),
         )
-        charger_error = data.get_charger_error()
         self.update_sensor(
             Keys.CHARGER_ERROR,
             None,
-            charger_error.name.lower() if charger_error else None,
+            _enum_to_lowercase(data.get_charger_error()),
         )
         self.update_sensor(
             Keys.INPUT_VOLTAGE,
@@ -213,11 +212,10 @@ class VictronBluetoothDeviceData(BluetoothData):
             data.get_input_voltage(),
             SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
         )
-        off_reason = data.get_off_reason()
         self.update_sensor(
             Keys.OFF_REASON,
             None,
-            off_reason.name.lower() if off_reason.name else None,
+            _enum_to_lowercase(data.get_off_reason()),
         )
         self.update_sensor(
             Keys.OUTPUT_VOLTAGE,
@@ -227,15 +225,10 @@ class VictronBluetoothDeviceData(BluetoothData):
         )
 
     def _update_dc_energy_meter(self, data: DcEnergyMeterData) -> None:
-        meter_type = data.get_meter_type()
-        if meter_type is not None:
-            meter_type_string = meter_type.name.lower()
-        else:
-            meter_type_string = None
         self.update_sensor(
             Keys.METER_TYPE,
             None,
-            meter_type_string,
+            _enum_to_lowercase(data.get_meter_type()),
         )
         self.update_sensor(
             Keys.CURRENT,
@@ -249,11 +242,10 @@ class VictronBluetoothDeviceData(BluetoothData):
             data.get_voltage(),
             SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
         )
-        alarm = data.get_alarm()
         self.update_sensor(
             Keys.ALARM,
             None,
-            alarm.name.lower() if alarm.name else "no alarm",
+            _enum_to_lowercase(data.get_alarm()),
         )
         self.update_sensor(
             Keys.TEMPERATURE,
@@ -264,7 +256,7 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             Keys.AUX_MODE,
             None,
-            data.get_aux_mode().name.lower(),
+            _enum_to_lowercase(data.get_aux_mode()),
         )
         self.update_sensor(
             Keys.TEMPERATURE,
@@ -280,41 +272,35 @@ class VictronBluetoothDeviceData(BluetoothData):
         )
 
     def _update_smart_battery_protect(self, data: SmartBatteryProtectData) -> None:
-        device_state = data.get_device_state()
         self.update_sensor(
             Keys.DEVICE_STATE,
             None,
-            device_state.name.lower() if device_state else None,
+            _enum_to_lowercase(data.get_device_state()),
         )
-        output_state = data.get_output_state()
         self.update_sensor(
             Keys.OUTPUT_STATE,
             None,
-            output_state.name.lower() if output_state else None,
+            _enum_to_lowercase(data.get_output_state()),
         )
-        error_code = data.get_error_code()
         self.update_sensor(
             Keys.ERROR_CODE,
             None,
-            error_code.name.lower() if error_code else None,
+            _enum_to_lowercase(data.get_error_code()),
         )
-        alarm_reason = data.get_alarm_reason()
         self.update_sensor(
             Keys.ALARM,
             None,
-            alarm_reason.name.lower() if alarm_reason.name else None,
+            _enum_to_lowercase(data.get_alarm_reason()),
         )
-        warning_reason = data.get_warning_reason()
         self.update_sensor(
             Keys.WARNING,
             None,
-            warning_reason.name.lower() if warning_reason.name else None,
+            _enum_to_lowercase(data.get_warning_reason()),
         )
-        off_reason = data.get_off_reason()
         self.update_sensor(
             Keys.OFF_REASON,
             None,
-            off_reason.name.lower() if off_reason.name else None,
+            _enum_to_lowercase(data.get_off_reason()),
         )
         self.update_sensor(
             Keys.INPUT_VOLTAGE,
@@ -443,3 +429,10 @@ class VictronBluetoothDeviceData(BluetoothData):
             data.get_soc(),
             SensorDeviceClass.BATTERY,  # type: ignore [arg-type]
         )
+
+
+def _enum_to_lowercase(enum_value: Enum | None) -> str:
+    """Convert an enum value to a lowercase string."""
+    if not enum_value:
+        return "none"
+    return enum_value.name.lower() if enum_value.name else "unknown"
