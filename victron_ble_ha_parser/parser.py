@@ -328,11 +328,10 @@ class VictronBluetoothDeviceData(BluetoothData):
             data.get_battery_temperature(),
             SensorDeviceClass.TEMPERATURE,  # type: ignore [arg-type]
         )
-        balancer_status = data.get_balancer_status()
         self.update_sensor(
             Keys.BALANCER_STATUS,
             None,
-            balancer_status.name.lower() if balancer_status else None,
+            _enum_to_lowercase(data.get_balancer_status()),
         )
         for i in range(7):
             self.update_sensor(
@@ -347,7 +346,7 @@ class VictronBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             Keys.CHARGE_STATE,
             None,
-            charge_state.name.lower() if charge_state else None,
+            _enum_to_lowercase(charge_state),  # type: ignore [arg-type]
         )
         self.update_sensor(
             Keys.BATTERY_VOLTAGE,
@@ -381,17 +380,15 @@ class VictronBluetoothDeviceData(BluetoothData):
         )
 
     def _update_vebus(self, data: VEBusData) -> None:
-        device_state = data.get_device_state()
         self.update_sensor(
             Keys.DEVICE_STATE,
             None,
-            device_state.name.lower() if device_state else None,
+            _enum_to_lowercase(data.get_device_state()),
         )
-        ac_in_state = data.get_ac_in_state()
         self.update_sensor(
             Keys.AC_IN_STATE,
             None,
-            ac_in_state.name if ac_in_state else None,
+            _enum_to_lowercase(data.get_ac_in_state()),
         )
         self.update_sensor(
             Keys.AC_IN_POWER,
