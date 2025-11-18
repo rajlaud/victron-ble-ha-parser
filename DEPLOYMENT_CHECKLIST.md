@@ -34,10 +34,10 @@ After merging this PR and configuring PyPI:
 
 1. [x] Update version in `pyproject.toml` to the next version (e.g., `0.4.9`)
 2. [x] Commit and push to main
-3. [ ] Create and push a tag: `git tag v0.4.9 && git push origin v0.4.9`
-4. [ ] Verify workflow runs successfully in GitHub Actions
-5. [ ] Verify package appears on PyPI: https://pypi.org/project/victron-ble-ha-parser/
-6. [ ] Test installation: `pip install victron-ble-ha-parser`
+3. [x] Create and push a tag: `git tag v0.4.9 && git push origin v0.4.9`
+4. [x] Verify workflow runs successfully in GitHub Actions
+5. [x] Verify package appears on PyPI: https://pypi.org/project/victron-ble-ha-parser/
+6. [x] Test installation: `pip install victron-ble-ha-parser`
 
 ## Home Assistant Compliance
 
@@ -54,8 +54,8 @@ Verify compliance with [Home Assistant dependency transparency requirements](htt
 
 After each release:
 
-- [ ] Verify package on PyPI has correct version
-- [ ] Verify both sdist and wheel are available on PyPI
-- [ ] Verify README renders correctly on PyPI
-- [ ] Test installation from PyPI in a clean environment
-- [ ] Verify the source code tag matches the PyPI version
+- [x] Verify package on PyPI has correct version
+- [x] Verify both sdist and wheel are available on PyPI
+- [x] Verify README renders correctly on PyPI
+- [x] Test installation from PyPI in a clean environment
+- [x] Verify the source code tag matches the PyPI version
