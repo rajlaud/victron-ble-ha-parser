@@ -1,7 +1,5 @@
 # Victron BLE HA Parser
 
-[![PyPI version](https://badge.fury.io/py/victron-ble-ha-parser.svg)](https://badge.fury.io/py/victron-ble-ha-parser)
-
 ## Overview
 
 This project exists solely to provide an interface to the excellent
