@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "victron_ble_ha_parser"
-version = "0.4.8"
+version = "0.4.9"
 description = "A parser for Victron BLE messages suitable for use with Home Assistant"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "Apache-2.0"}
+license = { text = "Apache-2.0" }
 authors = [{ name = "Raj Laud", email = "raj.laud@gmail.com" }]
 keywords = ["victron", "bluetooth", "ble", "home-assistant", "parser"]
 classifiers = [

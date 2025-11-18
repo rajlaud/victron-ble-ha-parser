@@ -24,16 +24,16 @@ This checklist helps verify that the PyPI deployment pipeline is properly config
 
 Follow the instructions in `RELEASING.md` to configure:
 
-1. [ ] PyPI Trusted Publisher configured for this repository
-2. [ ] GitHub environment `pypi` created in repository settings
-3. [ ] (Optional) Environment protection rules configured
+1. [x] PyPI Trusted Publisher configured for this repository
+2. [x] GitHub environment `pypi` created in repository settings
+3. [x] (Optional) Environment protection rules configured
 
 ## First Release Test
 
 After merging this PR and configuring PyPI:
 
-1. [ ] Update version in `pyproject.toml` to the next version (e.g., `0.4.9`)
-2. [ ] Commit and push to main
+1. [x] Update version in `pyproject.toml` to the next version (e.g., `0.4.9`)
+2. [x] Commit and push to main
 3. [ ] Create and push a tag: `git tag v0.4.9 && git push origin v0.4.9`
 4. [ ] Verify workflow runs successfully in GitHub Actions
 5. [ ] Verify package appears on PyPI: https://pypi.org/project/victron-ble-ha-parser/
