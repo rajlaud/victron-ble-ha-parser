@@ -6,10 +6,28 @@ build-backend = "setuptools.build_meta"
 name = "victron_ble_ha_parser"
 version = "0.4.8"
 description = "A parser for Victron BLE messages suitable for use with Home Assistant"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
 authors = [{ name = "Raj Laud", email = "raj.laud@gmail.com" }]
-license = "apache-2.0"
+keywords = ["victron", "bluetooth", "ble", "home-assistant", "parser"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Home Automation",
+]
 dependencies = [
     "bluetooth-sensor-state-data>=1.6.1",
     "sensor-state-data>=2.16.0",
     "victron-ble==0.9.2",
 ]
+
+[project.urls]
+Homepage = "https://github.com/rajlaud/victron-ble-ha-parser"
+Repository = "https://github.com/rajlaud/victron-ble-ha-parser"
+Issues = "https://github.com/rajlaud/victron-ble-ha-parser/issues"

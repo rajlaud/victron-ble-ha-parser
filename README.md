@@ -6,6 +6,14 @@ This project exists solely to provide an interface to the excellent
 [victron-ble](https://github.com/keshavdv/victron-ble) project suitable for use with a Home
 Assistant integration. Thank you to Keshav Varma for maintaining the `victron-ble` project.
 
+## Installation
+
+This package is available on PyPI:
+
+```bash
+pip install victron-ble-ha-parser
+```
+
 ## Installing the Home Assistant custom component
 
 Currently the Home Assistant integration is only available as a custom component, for testing
