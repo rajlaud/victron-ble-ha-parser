@@ -333,7 +333,7 @@ class VictronBluetoothDeviceData(BluetoothData):
             None,
             _enum_to_lowercase(data.get_balancer_status()),
         )
-        for i in range(7):
+        for i in range(8):
             self.update_sensor(
                 getattr(Keys, f"CELL_{i+1}_VOLTAGE"),
                 Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
