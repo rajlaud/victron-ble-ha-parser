@@ -62,6 +62,7 @@ class Keys(sensor_state_data.enum.StrEnum):
     CELL_5_VOLTAGE = "cell_5_voltage"
     CELL_6_VOLTAGE = "cell_6_voltage"
     CELL_7_VOLTAGE = "cell_7_voltage"
+    CELL_8_VOLTAGE = "cell_8_voltage"
     CHARGE_STATE = "charge_state"
     CHARGER_ERROR = "charger_error"
     CONSUMED_AMPERE_HOURS = "consumed_ampere_hours"
