@@ -45,6 +45,7 @@ class Units(sensor_state_data.enum.StrEnum):
 class Keys(sensor_state_data.enum.StrEnum):
     """Class of victron-ble keys."""
 
+    AC_CURRENT = "ac_current"
     AC_IN_POWER = "ac_in_power"
     AC_IN_STATE = "ac_in_state"
     AC_OUT_POWER = "ac_out_power"
@@ -74,8 +75,14 @@ class Keys(sensor_state_data.enum.StrEnum):
     METER_TYPE = "meter_type"
     MIDPOINT_VOLTAGE = "midpoint_voltage"
     OFF_REASON = "off_reason"
+    OUTPUT_CURRENT_1 = "output_current_1"
+    OUTPUT_CURRENT_2 = "output_current_2"
+    OUTPUT_CURRENT_3 = "output_current_3"
     OUTPUT_STATE = "output_state"
     OUTPUT_VOLTAGE = "output_voltage"
+    OUTPUT_VOLTAGE_1 = "output_voltage_1"
+    OUTPUT_VOLTAGE_2 = "output_voltage_2"
+    OUTPUT_VOLTAGE_3 = "output_voltage_3"
     REMAINING_MINUTES = "remaining_minutes"
     SOLAR_POWER = "solar_power"
     STARTER_VOLTAGE = "starter_voltage"
