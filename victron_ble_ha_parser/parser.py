@@ -12,6 +12,8 @@ from home_assistant_bluetooth import BluetoothServiceInfo
 from victron_ble.devices import (
     BatteryMonitor,
     BatteryMonitorData,
+    BatterySense,
+    BatterySenseData,
     DcDcConverter,
     DcDcConverterData,
     DcEnergyMeter,
@@ -96,6 +98,7 @@ class VictronBluetoothDeviceData(BluetoothData):
             parser,
             (
                 BatteryMonitor,
+                BatterySense,
                 DcDcConverter,
                 DcEnergyMeter,
                 SmartBatteryProtect,
@@ -122,6 +125,8 @@ class VictronBluetoothDeviceData(BluetoothData):
             return
         if isinstance(parsed_data, BatteryMonitorData):
             self._update_battery_monitor(parsed_data)
+        elif isinstance(parsed_data, BatterySenseData):
+            self._update_battery_sense(parsed_data)
         elif isinstance(parsed_data, DcDcConverterData):
             self._update_dc_dc_converter(parsed_data)
         elif isinstance(parsed_data, DcEnergyMeterData):
@@ -193,6 +198,20 @@ class VictronBluetoothDeviceData(BluetoothData):
             Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
             data.get_midpoint_voltage(),
             SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+
+    def _update_battery_sense(self, data: BatterySenseData) -> None:
+        self.update_sensor(
+            Keys.VOLTAGE,
+            Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
+            data.get_voltage(),
+            SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.TEMPERATURE,
+            Units.TEMP_CELSIUS,  # type: ignore [arg-type]
+            data.get_temperature(),
+            SensorDeviceClass.TEMPERATURE,  # type: ignore [arg-type]
         )
 
     def _update_dc_dc_converter(self, data: DcDcConverterData) -> None:
@@ -342,11 +361,15 @@ class VictronBluetoothDeviceData(BluetoothData):
             )
 
     def _update_solar_charger(self, data: SolarChargerData) -> None:
-        charge_state = data.get_charge_state()
         self.update_sensor(
             Keys.CHARGE_STATE,
             None,
-            _enum_to_lowercase(charge_state),  # type: ignore [arg-type]
+            _enum_to_lowercase(data.get_charge_state()),
+        )
+        self.update_sensor(
+            Keys.CHARGER_ERROR,
+            None,
+            _enum_to_lowercase(data.get_charger_error()),
         )
         self.update_sensor(
             Keys.BATTERY_VOLTAGE,
