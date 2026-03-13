@@ -520,4 +520,4 @@ def _enum_to_lowercase(enum_value: Enum | None) -> str | None:
     """Convert an enum value to a lowercase string."""
     if enum_value == "unknown":
         return None
-    return enum_value.name.lower() if enum_value else None
+    return enum_value.name.lower() if enum_value is not None else None
