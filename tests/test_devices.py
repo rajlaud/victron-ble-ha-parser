@@ -80,3 +80,61 @@ class TestDeviceSensors:
         device = VictronBluetoothDeviceData(DEVICES[device_id]["key"])
         update = device.update(make_service_info(device_id))
         assert update == snapshot
+
+
+def make_service_info_with_data(manufacturer_data: bytes) -> BluetoothServiceInfo:
+    """Create a BluetoothServiceInfo with arbitrary Victron manufacturer data."""
+    return BluetoothServiceInfo(
+        name="Test Device",
+        address="AA:BB:CC:DD:EE:FF",
+        rssi=-60,
+        manufacturer_data={0x02E1: manufacturer_data},
+        service_data={},
+        service_uuids=[],
+        source="local",
+    )
+
+
+# A known-good advertisement payload used to exercise key validation in isolation.
+_BATTERY_MONITOR_ADV = bytes.fromhex(
+    DEVICES["battery_monitor"]["advertisement"]
+)
+
+
+@pytest.mark.parametrize(
+    "raw_data",
+    [
+        b"",
+        b"\x10",
+        bytes.fromhex("deadbeef"),
+    ],
+)
+class TestMalformedManufacturerData:
+    """Malformed manufacturer data must never raise and must not be reported as supported."""
+
+    def test_supported_returns_false(self, raw_data: bytes) -> None:
+        """supported() returns False for malformed advertisement payloads."""
+        device = VictronBluetoothDeviceData(DEVICES["battery_monitor"]["key"])
+        assert not device.supported(make_service_info_with_data(raw_data))
+
+    def test_validate_key_returns_false(self, raw_data: bytes) -> None:
+        """validate_advertisement_key() returns False for malformed advertisement payloads."""
+        device = VictronBluetoothDeviceData(DEVICES["battery_monitor"]["key"])
+        assert device.validate_advertisement_key(raw_data) is False
+
+
+@pytest.mark.parametrize(
+    "key",
+    [
+        "",
+        "not-hex",
+        "00",
+    ],
+)
+class TestInvalidAdvertisementKey:
+    """Invalid advertisement keys must never raise and validate_advertisement_key must return False."""
+
+    def test_validate_key_returns_false(self, key: str) -> None:
+        """validate_advertisement_key() returns False for invalid key strings."""
+        device = VictronBluetoothDeviceData(key)
+        assert device.validate_advertisement_key(_BATTERY_MONITOR_ADV) is False
