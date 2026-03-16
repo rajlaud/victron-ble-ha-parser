@@ -52,21 +52,32 @@ class VictronBluetoothDeviceData(BluetoothData):
             _LOGGER.debug("Advertisement key not set")
             return False
 
-        parser = detect_device_type(data)
+        try:
+            parser = detect_device_type(data)
+        except (struct_error, IndexError):
+            _LOGGER.error("Unable to detect device type from malformed data")
+            return False
         if parser is None:
             _LOGGER.error("Unable to detect device type")
             return False
 
-        parsed_data = parser(self._advertisement_key).parse_container(data)
+        try:
+            parsed_data = parser(self._advertisement_key).parse_container(data)
+        except (struct_error, IndexError):
+            _LOGGER.error("Unable to parse container from malformed data")
+            return False
         if parsed_data is None:
             _LOGGER.error("Unable to parse data")
             return False
 
         encrypted_data = parsed_data.encrypted_data
+        if not encrypted_data:
+            _LOGGER.error("No encrypted data in advertisement")
+            return False
 
         try:
             key_first_byte = bytes.fromhex(self._advertisement_key)[0]
-        except ValueError:
+        except (ValueError, IndexError):
             _LOGGER.error("Invalid advertisement key")
             return False
 
