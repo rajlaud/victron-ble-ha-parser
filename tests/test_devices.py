@@ -96,9 +96,7 @@ def make_service_info_with_data(manufacturer_data: bytes) -> BluetoothServiceInf
 
 
 # A known-good advertisement payload used to exercise key validation in isolation.
-_BATTERY_MONITOR_ADV = bytes.fromhex(
-    DEVICES["battery_monitor"]["advertisement"]
-)
+_BATTERY_MONITOR_ADV = bytes.fromhex(DEVICES["battery_monitor"]["advertisement"])
 
 
 @pytest.mark.parametrize(
