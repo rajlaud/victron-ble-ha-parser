@@ -121,6 +121,43 @@ class TestMalformedManufacturerData:
         assert device.validate_advertisement_key(raw_data) is False
 
 
+class TestStaleDataCleared:
+    """Verify that stale sensor data from a previous update does not leak."""
+
+    def test_no_stale_entity_values_after_non_victron_packet(self) -> None:
+        """entity_values must not contain stale sensors after a non-Victron packet."""
+        device = VictronBluetoothDeviceData(DEVICES["battery_monitor"]["key"])
+        # First update succeeds
+        update1 = device.update(make_service_info("battery_monitor"))
+        assert len(update1.entity_values) > 1
+
+        # Second update has no Victron data
+        non_victron = BluetoothServiceInfo(
+            name="SmartShunt",
+            address="AA:BB:CC:DD:EE:FF",
+            rssi=-60,
+            manufacturer_data={0x0000: b"garbage"},
+            service_data={},
+            service_uuids=[],
+            source="local",
+        )
+        update2 = device.update(non_victron)
+        # Only signal_strength should remain (added by BluetoothData.update)
+        assert len(update2.entity_values) <= 1
+
+    def test_no_stale_entity_values_after_bad_key(self) -> None:
+        """entity_values must not contain stale sensors when decryption fails."""
+        good_key = DEVICES["battery_monitor"]["key"]
+        device = VictronBluetoothDeviceData(good_key)
+        update1 = device.update(make_service_info("battery_monitor"))
+        assert len(update1.entity_values) > 1
+
+        # Switch to a bad key and try again with the same advertisement
+        device._advertisement_key = "00" + good_key[2:]
+        update2 = device.update(make_service_info("battery_monitor"))
+        assert len(update2.entity_values) <= 1
+
+
 @pytest.mark.parametrize(
     "key",
     [
