@@ -9,6 +9,7 @@ class SensorDeviceClass(sensor_state_data.BaseDeviceClass):
 
     # inherited fields
 
+    APPARENT_POWER = sensor_state_data.DeviceClass.APPARENT_POWER
     BATTERY = sensor_state_data.DeviceClass.BATTERY
     CURRENT = sensor_state_data.DeviceClass.CURRENT
     DURATION = sensor_state_data.DeviceClass.DURATION

@@ -453,7 +453,7 @@ class VictronBluetoothDeviceData(BluetoothData):
             Keys.AC_APPARENT_POWER,
             Units.POWER_VOLT_AMPERE,  # type: ignore [arg-type]
             data.get_ac_apparent_power(),
-            SensorDeviceClass.POWER,  # type: ignore [arg-type]
+            SensorDeviceClass.APPARENT_POWER,  # type: ignore [arg-type]
         )
 
     def _update_orion_xs(self, data: OrionXSData) -> None:
