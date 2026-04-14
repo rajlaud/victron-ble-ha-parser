@@ -89,6 +89,14 @@ class VictronBluetoothDeviceData(BluetoothData):
         return True
 
     def _start_update(self, data: BluetoothServiceInfo) -> None:
+        # Clear per-update state to prevent stale data from a previous
+        # successful parse leaking into the current SensorUpdate when
+        # this update returns early (e.g. unsupported device, bad key).
+        self._sensor_values_updates.clear()
+        self._sensor_descriptions_updates.clear()
+        self._binary_sensor_values_updates.clear()
+        self._binary_sensor_descriptions_updates.clear()
+
         try:
             raw_data = data.manufacturer_data[VICTRON_IDENTIFIER]
         except (KeyError, IndexError):
