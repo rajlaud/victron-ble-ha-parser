@@ -49,6 +49,18 @@ DEVICES = {
         "advertisement": "100030a308f926c1b5170a0d2280335bf12d5ed083",
         "key": "c129cf8f75c3fe5a1655b481e205fb7d",
     },
+    # Inverter and Orion XS advertisements generated from known decrypted
+    # payloads (no upstream victron-ble test fixtures exist for these yet).
+    "inverter": {
+        "name": "Phoenix Inverter",
+        "advertisement": "100064a2033412aa4d1c7c1e0100570c5f4d938199990f1d",
+        "key": "aabbccdd11223344aabbccdd11223344",
+    },
+    "orion_xs": {
+        "name": "Orion XS",
+        "advertisement": "1000f0a30f3412ff4633ad59199dc8614355ac6cb10d009c",
+        "key": "ffeeddcc99887766ffeeddcc99887766",
+    },
 }
 
 

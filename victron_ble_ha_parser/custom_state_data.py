@@ -33,6 +33,7 @@ class Units(sensor_state_data.enum.StrEnum):
     ELECTRIC_POTENTIAL_VOLT = sensor_state_data.Units.ELECTRIC_POTENTIAL_VOLT
     ENERGY_WATT_HOUR = sensor_state_data.Units.ENERGY_WATT_HOUR
     PERCENTAGE = sensor_state_data.Units.PERCENTAGE
+    POWER_VOLT_AMPERE = sensor_state_data.Units.POWER_VOLT_AMPERE
     POWER_WATT = sensor_state_data.Units.POWER_WATT
     TEMP_CELSIUS = sensor_state_data.Units.TEMP_CELSIUS
     TIME_MINUTES = sensor_state_data.Units.TIME_MINUTES
@@ -45,11 +46,13 @@ class Units(sensor_state_data.enum.StrEnum):
 class Keys(sensor_state_data.enum.StrEnum):
     """Class of victron-ble keys."""
 
+    AC_APPARENT_POWER = "ac_apparent_power"
     AC_CURRENT = "ac_current"
     AC_IN_POWER = "ac_in_power"
     AC_IN_STATE = "ac_in_state"
     AC_OUT_POWER = "ac_out_power"
     AC_OUT_STATE = "ac_out_state"
+    AC_VOLTAGE = "ac_voltage"
     ALARM = "alarm"
     AUX_MODE = "aux_mode"
     BALANCER_STATUS = "balancer_status"
@@ -71,10 +74,12 @@ class Keys(sensor_state_data.enum.StrEnum):
     DEVICE_STATE = "device_state"
     ERROR_CODE = "error_code"
     EXTERNAL_DEVICE_LOAD = "external_device_load"
+    INPUT_CURRENT = "input_current"
     INPUT_VOLTAGE = "input_voltage"
     METER_TYPE = "meter_type"
     MIDPOINT_VOLTAGE = "midpoint_voltage"
     OFF_REASON = "off_reason"
+    OUTPUT_CURRENT = "output_current"
     OUTPUT_CURRENT_1 = "output_current_1"
     OUTPUT_CURRENT_2 = "output_current_2"
     OUTPUT_CURRENT_3 = "output_current_3"
