@@ -20,6 +20,10 @@ from victron_ble.devices import (
     DcDcConverterData,
     DcEnergyMeter,
     DcEnergyMeterData,
+    Inverter,
+    InverterData,
+    OrionXS,
+    OrionXSData,
     SolarCharger,
     SolarChargerData,
     SmartBatteryProtect,
@@ -123,6 +127,8 @@ class VictronBluetoothDeviceData(BluetoothData):
                 BatterySense,
                 DcDcConverter,
                 DcEnergyMeter,
+                Inverter,
+                OrionXS,
                 SmartBatteryProtect,
                 SmartLithium,
                 SolarCharger,
@@ -155,6 +161,10 @@ class VictronBluetoothDeviceData(BluetoothData):
             self._update_dc_dc_converter(parsed_data)
         elif isinstance(parsed_data, DcEnergyMeterData):
             self._update_dc_energy_meter(parsed_data)
+        elif isinstance(parsed_data, InverterData):
+            self._update_inverter(parsed_data)
+        elif isinstance(parsed_data, OrionXSData):
+            self._update_orion_xs(parsed_data)
         elif isinstance(parsed_data, SolarChargerData):
             self._update_solar_charger(parsed_data)
         elif isinstance(parsed_data, SmartBatteryProtectData):
@@ -416,6 +426,83 @@ class VictronBluetoothDeviceData(BluetoothData):
             Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
             data.get_output_voltage(),
             SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+
+    def _update_inverter(self, data: InverterData) -> None:
+        self.update_sensor(
+            Keys.DEVICE_STATE,
+            None,
+            _enum_to_lowercase(data.get_device_state()),
+        )
+        self.update_sensor(
+            Keys.ALARM,
+            None,
+            _enum_to_lowercase(data.get_alarm()),
+        )
+        self.update_sensor(
+            Keys.BATTERY_VOLTAGE,
+            Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
+            data.get_battery_voltage(),
+            SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.AC_VOLTAGE,
+            Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
+            data.get_ac_voltage(),
+            SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.AC_CURRENT,
+            Units.ELECTRIC_CURRENT_AMPERE,  # type: ignore [arg-type]
+            data.get_ac_current(),
+            SensorDeviceClass.CURRENT,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.AC_APPARENT_POWER,
+            Units.POWER_VOLT_AMPERE,  # type: ignore [arg-type]
+            data.get_ac_apparent_power(),
+            SensorDeviceClass.APPARENT_POWER,  # type: ignore [arg-type]
+        )
+
+    def _update_orion_xs(self, data: OrionXSData) -> None:
+        self.update_sensor(
+            Keys.CHARGE_STATE,
+            None,
+            _enum_to_lowercase(data.get_charge_state()),
+        )
+        self.update_sensor(
+            Keys.CHARGER_ERROR,
+            None,
+            _enum_to_lowercase(data.get_charger_error()),
+        )
+        self.update_sensor(
+            Keys.INPUT_VOLTAGE,
+            Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
+            data.get_input_voltage(),
+            SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.INPUT_CURRENT,
+            Units.ELECTRIC_CURRENT_AMPERE,  # type: ignore [arg-type]
+            data.get_input_current(),
+            SensorDeviceClass.CURRENT,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.OUTPUT_VOLTAGE,
+            Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
+            data.get_output_voltage(),
+            SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.OUTPUT_CURRENT,
+            Units.ELECTRIC_CURRENT_AMPERE,  # type: ignore [arg-type]
+            data.get_output_current(),
+            SensorDeviceClass.CURRENT,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.OFF_REASON,
+            None,
+            _enum_to_lowercase(data.get_off_reason()),
         )
 
     def _update_smart_lithium(self, data: SmartLithiumData) -> None:
