@@ -61,6 +61,13 @@ DEVICES = {
         "advertisement": "1000f0a30f3412ff4633ad59199dc8614355ac6cb10d009c",
         "key": "ffeeddcc99887766ffeeddcc99887766",
     },
+    # Lithium SuperPack NG (model 0xA1D0) broadcasts record type 0x0A,
+    # which victron-ble maps to LynxSmartBMS.
+    "lynx_smart_bms": {
+        "name": "Lithium SuperPack NG",
+        "advertisement": "1000d0a10a341211ae1f956442c38567a6edf405f8a360e7",
+        "key": "112233445566778899aabbccddeeff00",
+    },
 }
 
 
