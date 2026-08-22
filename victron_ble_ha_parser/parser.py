@@ -22,6 +22,8 @@ from victron_ble.devices import (
     DcEnergyMeterData,
     Inverter,
     InverterData,
+    LynxSmartBMS,
+    LynxSmartBMSData,
     OrionXS,
     OrionXSData,
     SolarCharger,
@@ -128,6 +130,7 @@ class VictronBluetoothDeviceData(BluetoothData):
                 DcDcConverter,
                 DcEnergyMeter,
                 Inverter,
+                LynxSmartBMS,
                 OrionXS,
                 SmartBatteryProtect,
                 SmartLithium,
@@ -163,6 +166,8 @@ class VictronBluetoothDeviceData(BluetoothData):
             self._update_dc_energy_meter(parsed_data)
         elif isinstance(parsed_data, InverterData):
             self._update_inverter(parsed_data)
+        elif isinstance(parsed_data, LynxSmartBMSData):
+            self._update_lynx_smart_bms(parsed_data)
         elif isinstance(parsed_data, OrionXSData):
             self._update_orion_xs(parsed_data)
         elif isinstance(parsed_data, SolarChargerData):
@@ -462,6 +467,44 @@ class VictronBluetoothDeviceData(BluetoothData):
             Units.POWER_VOLT_AMPERE,  # type: ignore [arg-type]
             data.get_ac_apparent_power(),
             SensorDeviceClass.APPARENT_POWER,  # type: ignore [arg-type]
+        )
+
+    def _update_lynx_smart_bms(self, data: LynxSmartBMSData) -> None:
+        self.update_sensor(
+            Keys.REMAINING_MINUTES,
+            Units.TIME_MINUTES,  # type: ignore [arg-type]
+            data.get_remaining_mins(),
+            SensorDeviceClass.DURATION,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.VOLTAGE,
+            Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
+            data.get_voltage(),
+            SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.CURRENT,
+            Units.ELECTRIC_CURRENT_AMPERE,  # type: ignore [arg-type]
+            data.get_current(),
+            SensorDeviceClass.CURRENT,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.STATE_OF_CHARGE,
+            Units.PERCENTAGE,  # type: ignore [arg-type]
+            data.get_soc(),
+            SensorDeviceClass.BATTERY,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.CONSUMED_AMPERE_HOURS,
+            Units.ELECTRIC_CURRENT_FLOW_AMPERE_HOUR,  # type: ignore [arg-type]
+            data.get_consumed_ah(),
+            SensorDeviceClass.CURRENT_FLOW,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.BATTERY_TEMPERATURE,
+            Units.TEMP_CELSIUS,  # type: ignore [arg-type]
+            data.get_battery_temperature(),
+            SensorDeviceClass.TEMPERATURE,  # type: ignore [arg-type]
         )
 
     def _update_orion_xs(self, data: OrionXSData) -> None:
