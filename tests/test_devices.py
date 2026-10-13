@@ -192,3 +192,36 @@ class TestInvalidAdvertisementKey:
         """validate_advertisement_key() returns False for invalid key strings."""
         device = VictronBluetoothDeviceData(key)
         assert device.validate_advertisement_key(_BATTERY_MONITOR_ADV) is False
+
+
+def test_solar_sense_requires_a_well_formed_key() -> None:
+    """SolarSense advertisements use the usual Victron key check byte."""
+    advertisement = bytes.fromhex("100050c0ffc20c010514000400000020000000c0cac61afc")
+
+    assert VictronBluetoothDeviceData(
+        "0123456789abcdef0123456789abcdef"
+    ).validate_advertisement_key(advertisement)
+    assert not VictronBluetoothDeviceData(
+        "0023456789abcdef0123456789abcdef"
+    ).validate_advertisement_key(advertisement)
+
+
+def test_solar_sense_sensor_update() -> None:
+    """SolarSense advertisements expose power, yield, irradiance and temperature."""
+    device = VictronBluetoothDeviceData("0123456789abcdef0123456789abcdef")
+    update = device.update(
+        make_service_info_with_data(
+            bytes.fromhex("100250c00100000100000000ffb400b007003421c8485300")
+        )
+    )
+
+    assert {
+        key.key: value.native_value
+        for key, value in update.entity_values.items()
+        if key.key != "signal_strength"
+    } == {
+        "solar_power": 180,
+        "yield_today": 1230,
+        "irradiance": 850,
+        "panel_temperature": 20,
+    }

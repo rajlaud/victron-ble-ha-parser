@@ -23,6 +23,7 @@ class SensorDeviceClass(sensor_state_data.BaseDeviceClass):
 
     CURRENT_FLOW = "current_flow"
     ENUM = "enum"
+    IRRADIANCE = "irradiance"
 
 
 class Units(sensor_state_data.enum.StrEnum):
@@ -38,6 +39,7 @@ class Units(sensor_state_data.enum.StrEnum):
     POWER_WATT = sensor_state_data.Units.POWER_WATT
     TEMP_CELSIUS = sensor_state_data.Units.TEMP_CELSIUS
     TIME_MINUTES = sensor_state_data.Units.TIME_MINUTES
+    IRRADIATION_WATTS_PER_SQUARE_METER = sensor_state_data.Units.IRRADIATION_WATTS_PER_SQUARE_METER
 
     # new fields
 
@@ -77,6 +79,7 @@ class Keys(sensor_state_data.enum.StrEnum):
     EXTERNAL_DEVICE_LOAD = "external_device_load"
     INPUT_CURRENT = "input_current"
     INPUT_VOLTAGE = "input_voltage"
+    IRRADIANCE = "irradiance"
     METER_TYPE = "meter_type"
     MIDPOINT_VOLTAGE = "midpoint_voltage"
     OFF_REASON = "off_reason"
@@ -89,6 +92,7 @@ class Keys(sensor_state_data.enum.StrEnum):
     OUTPUT_VOLTAGE_1 = "output_voltage_1"
     OUTPUT_VOLTAGE_2 = "output_voltage_2"
     OUTPUT_VOLTAGE_3 = "output_voltage_3"
+    PANEL_TEMPERATURE = "panel_temperature"
     REMAINING_MINUTES = "remaining_minutes"
     SOLAR_POWER = "solar_power"
     STARTER_VOLTAGE = "starter_voltage"

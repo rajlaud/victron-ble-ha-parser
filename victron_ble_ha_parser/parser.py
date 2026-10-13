@@ -28,6 +28,8 @@ from victron_ble.devices import (
     OrionXSData,
     SolarCharger,
     SolarChargerData,
+    SolarSense,
+    SolarSenseData,
     SmartBatteryProtect,
     SmartBatteryProtectData,
     SmartLithium,
@@ -135,6 +137,7 @@ class VictronBluetoothDeviceData(BluetoothData):
                 SmartBatteryProtect,
                 SmartLithium,
                 SolarCharger,
+                SolarSense,
                 VEBus,
             ),
         ):
@@ -172,6 +175,8 @@ class VictronBluetoothDeviceData(BluetoothData):
             self._update_orion_xs(parsed_data)
         elif isinstance(parsed_data, SolarChargerData):
             self._update_solar_charger(parsed_data)
+        elif isinstance(parsed_data, SolarSenseData):
+            self._update_solar_sense(parsed_data)
         elif isinstance(parsed_data, SmartBatteryProtectData):
             self._update_smart_battery_protect(parsed_data)
         elif isinstance(parsed_data, SmartLithiumData):
@@ -614,6 +619,32 @@ class VictronBluetoothDeviceData(BluetoothData):
             Units.ELECTRIC_CURRENT_AMPERE,  # type: ignore [arg-type]
             data.get_external_device_load(),
             SensorDeviceClass.CURRENT,  # type: ignore [arg-type]
+        )
+
+    def _update_solar_sense(self, data: SolarSenseData) -> None:
+        self.update_sensor(
+            Keys.SOLAR_POWER,
+            Units.POWER_WATT,  # type: ignore [arg-type]
+            data.get_installation_power(),
+            SensorDeviceClass.POWER,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.YIELD_TODAY,
+            Units.ENERGY_WATT_HOUR,  # type: ignore [arg-type]
+            data.get_yield_today(),
+            SensorDeviceClass.ENERGY,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.IRRADIANCE,
+            Units.IRRADIATION_WATTS_PER_SQUARE_METER,  # type: ignore [arg-type]
+            data.get_irradiance(),
+            SensorDeviceClass.IRRADIANCE,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.PANEL_TEMPERATURE,
+            Units.TEMP_CELSIUS,  # type: ignore [arg-type]
+            data.get_cell_temperature(),
+            SensorDeviceClass.TEMPERATURE,  # type: ignore [arg-type]
         )
 
     def _update_vebus(self, data: VEBusData) -> None:
