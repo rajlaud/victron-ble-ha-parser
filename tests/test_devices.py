@@ -68,6 +68,13 @@ DEVICES = {
         "advertisement": "1000d0a10a341211ae1f956442c38567a6edf405f8a360e7",
         "key": "112233445566778899aabbccddeeff00",
     },
+    # Multi RS Solar 48V/6000VA/100A (record type 0x0B): real-world decrypted
+    # payload from a PMR482602020, re-encrypted with a test key.
+    "multi_rs": {
+        "name": "Multi RS Solar",
+        "advertisement": "100042a40b785601d3348d74287d8e147fd9cfe586a899f9",
+        "key": "0123456789abcdef0123456789abcdef",
+    },
 }
 
 

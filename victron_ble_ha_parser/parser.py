@@ -24,6 +24,8 @@ from victron_ble.devices import (
     InverterData,
     LynxSmartBMS,
     LynxSmartBMSData,
+    MultiRS,
+    MultiRSData,
     OrionXS,
     OrionXSData,
     SolarCharger,
@@ -131,6 +133,7 @@ class VictronBluetoothDeviceData(BluetoothData):
                 DcEnergyMeter,
                 Inverter,
                 LynxSmartBMS,
+                MultiRS,
                 OrionXS,
                 SmartBatteryProtect,
                 SmartLithium,
@@ -168,6 +171,8 @@ class VictronBluetoothDeviceData(BluetoothData):
             self._update_inverter(parsed_data)
         elif isinstance(parsed_data, LynxSmartBMSData):
             self._update_lynx_smart_bms(parsed_data)
+        elif isinstance(parsed_data, MultiRSData):
+            self._update_multi_rs(parsed_data)
         elif isinstance(parsed_data, OrionXSData):
             self._update_orion_xs(parsed_data)
         elif isinstance(parsed_data, SolarChargerData):
@@ -505,6 +510,62 @@ class VictronBluetoothDeviceData(BluetoothData):
             Units.TEMP_CELSIUS,  # type: ignore [arg-type]
             data.get_battery_temperature(),
             SensorDeviceClass.TEMPERATURE,  # type: ignore [arg-type]
+        )
+
+    def _update_multi_rs(self, data: MultiRSData) -> None:
+        self.update_sensor(
+            Keys.DEVICE_STATE,
+            None,
+            _enum_to_lowercase(data.get_device_state()),
+        )
+        self.update_sensor(
+            Keys.CHARGER_ERROR,
+            None,
+            _enum_to_lowercase(data.get_charger_error()),
+        )
+        self.update_sensor(
+            Keys.BATTERY_CURRENT,
+            Units.ELECTRIC_CURRENT_AMPERE,  # type: ignore [arg-type]
+            data.get_battery_current(),
+            SensorDeviceClass.CURRENT,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.BATTERY_VOLTAGE,
+            Units.ELECTRIC_POTENTIAL_VOLT,  # type: ignore [arg-type]
+            data.get_battery_voltage(),
+            SensorDeviceClass.VOLTAGE,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.AC_IN_STATE,
+            None,
+            _enum_to_lowercase(data.get_active_ac_in()),
+        )
+        self.update_sensor(
+            Keys.AC_IN_POWER,
+            Units.POWER_WATT,  # type: ignore [arg-type]
+            data.get_active_ac_in_power(),
+            SensorDeviceClass.POWER,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.AC_OUT_POWER,
+            Units.POWER_WATT,  # type: ignore [arg-type]
+            data.get_active_ac_out_power(),
+            SensorDeviceClass.POWER,  # type: ignore [arg-type]
+        )
+        self.update_sensor(
+            Keys.SOLAR_POWER,
+            Units.POWER_WATT,  # type: ignore [arg-type]
+            data.get_pv_power(),
+            SensorDeviceClass.POWER,  # type: ignore [arg-type]
+        )
+        # victron-ble reports the MultiRS yield in kWh, but Home Assistant
+        # displays yield_today in Wh regardless of the unit set here
+        yield_today = data.get_yield_today()
+        self.update_sensor(
+            Keys.YIELD_TODAY,
+            Units.ENERGY_WATT_HOUR,  # type: ignore [arg-type]
+            round(yield_today * 1000) if yield_today is not None else None,
+            SensorDeviceClass.ENERGY,  # type: ignore [arg-type]
         )
 
     def _update_orion_xs(self, data: OrionXSData) -> None:
